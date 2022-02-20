@@ -1,0 +1,4 @@
+github.com/gotk3/gotk3 v0.6.1 h1:GJ400a0ecEEWrzjBvzBzH+pB/esEMIGdB9zPSmBdoeo=
+github.com/gotk3/gotk3 v0.6.1/go.mod h1:/hqFpkNa9T3JgNAE2fLvCdov7c5bw//FHNZrZ3Uv9/Q=
+github.com/kamilsamaj/go-appindicator v1.1.0 h1:lR9U9bAW+nSrdgqHYaNsTpdPzT5y8CWXlJTY72YqB00=
+github.com/kamilsamaj/go-appindicator v1.1.0/go.mod h1:2T6cWfqUFKdSAr94ZHxJiF/N4w8J2wLaSHGULAVmltM=
