@@ -10,4 +10,4 @@ ExecStart=/usr/local/bin/cpu-governor-svc
 TimeoutSec=2
 
 [Install]
-WantedBy=graphical-session.target
+WantedBy=multi-user.target

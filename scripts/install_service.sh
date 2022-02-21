@@ -12,7 +12,6 @@ cp -vf "${CONF_DIR}/etc/dbus-1/system.d/com.github.kamilsamaj.CpuGovernor.conf" 
 cp -vf "${CONF_DIR}/usr/lib/systemd/system/cpu-governor.service" /usr/lib/systemd/system/
 cp -vf "${CONF_DIR}/etc/xdg/autostart/cpu-indicator.desktop" /etc/xdg/autostart/
 cp -vf "${CONF_DIR}/etc/xdg/autostart/cpu-indicator.desktop" /usr/share/applications/
-#cp -vf "${CONF_DIR}/usr/share/dbus-1/system-services/com.github.kamilsamaj.CpuGovernor.service" /usr/share/dbus-1/system-services/
 
 # copy the service and application
 cp -vf {cpu-governor-svc,cpu-indicator-gtk3} /usr/local/bin/

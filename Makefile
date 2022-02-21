@@ -1,4 +1,4 @@
-.PHONY: all check gocritic build test clean install
+.PHONY: all check gocritic build test clean install uninstall
 
 default: all
 
@@ -22,6 +22,9 @@ build:
 
 install:
 	sudo ./scripts/install_service.sh
+
+uninstall:
+	sudo ./scripts/uninstall_service.sh
 
 clean:
 	@rm -fv ./cpu-indicator-gtk3
