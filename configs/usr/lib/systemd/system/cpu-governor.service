@@ -1,0 +1,13 @@
+[Unit]
+Description=cpu-governor
+Requires=dbus.socket
+After=dbus.service
+
+[Service]
+Type=exec
+User=root
+ExecStart=/usr/local/bin/cpu-governor-svc
+TimeoutSec=2
+
+[Install]
+WantedBy=graphical-session.target

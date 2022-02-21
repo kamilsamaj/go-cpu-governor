@@ -1,4 +1,4 @@
-.PHONY: all check gocritic build test clean
+.PHONY: all check gocritic build test clean install
 
 default: all
 
@@ -14,7 +14,14 @@ gocritic:
 	gocritic check -enableAll ./...
 
 build:
-	./scripts/build.sh
+	# build Gtk UI client
+	./scripts/build_gtk_app.sh
+
+	# build the service
+	CGO_ENABLED=0 go build -ldflags="-w -s" cmd/cpu-governor-svc/*.go
+
+install:
+	sudo ./scripts/install_service.sh
 
 clean:
 	@rm -fv ./cpu-indicator-gtk3

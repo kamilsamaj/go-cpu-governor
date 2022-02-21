@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=CPU Governor Indicator
+Comment=Indicator Application for switching CPU frequency scaling = CPU Governor
+Exec=cpu-indicator-gtk3
+Type=Application
+Icon=indicator-cpufreq-25
