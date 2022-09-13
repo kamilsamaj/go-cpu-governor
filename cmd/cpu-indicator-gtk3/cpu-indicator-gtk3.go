@@ -35,30 +35,30 @@ func setIndicatorItem(indicator *appindicator.Indicator, selectedOption string) 
 	case "powersave":
 		indicator.SetIcon("indicator-cpufreq-25")
 		powersaveItem.SetLabel("•  powersave")
-		performanceItem.SetLabel("   balance power")
-		performanceItem.SetLabel("   balance performance")
+		balancePowerItem.SetLabel("   balance power")
+		balancePerformanceItem.SetLabel("   balance performance")
 		performanceItem.SetLabel("   performance")
 		return nil
 	case "balancepower":
 		indicator.SetIcon("indicator-cpufreq-50")
 		powersaveItem.SetLabel("   powersave")
-		performanceItem.SetLabel("•  balance power")
-		performanceItem.SetLabel("   balance performance")
+		balancePowerItem.SetLabel("•  balance power")
+		balancePerformanceItem.SetLabel("   balance performance")
 		performanceItem.SetLabel("   performance")
 		return nil
 	case "balanceperformance":
 		indicator.SetIcon("indicator-cpufreq-75")
 		powersaveItem.SetLabel("   powersave")
-		performanceItem.SetLabel("   balance power")
-		performanceItem.SetLabel("•  balance performance")
+		balancePowerItem.SetLabel("   balance power")
+		balancePerformanceItem.SetLabel("•  balance performance")
 		performanceItem.SetLabel("   performance")
 		return nil
-	case "power":
+	case "performance":
 		indicator.SetIcon("indicator-cpufreq-100")
 		powersaveItem.SetLabel("   powersave")
-		performanceItem.SetLabel("   balance power")
-		performanceItem.SetLabel("   balance performance")
-		performanceItem.SetLabel("\u2022  performance")
+		balancePowerItem.SetLabel("   balance power")
+		balancePerformanceItem.SetLabel("   balance performance")
+		performanceItem.SetLabel("•  performance")
 		return nil
 	default:
 		return fmt.Errorf("unrecognized %s option", selectedOption)
@@ -100,14 +100,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	indicator := appindicator.New("cpu-governor", "indicator-cpufreq-25", appindicator.CategoryApplicationStatus)
-	indicator.SetTitle("CPU Governor")
+	// default mode = 'balance power'
+	indicator := appindicator.New("cpu-mode", "indicator-cpufreq-50", appindicator.CategoryApplicationStatus)
+	indicator.SetTitle("CPU Mode")
 	indicator.SetLabel("", "")
 	indicator.SetStatus(appindicator.StatusActive)
 	indicator.SetMenu(menu)
 
 	// add "powersave" item
-	powersaveItem, err = gtk.MenuItemNewWithLabel("•  powersave")
+	powersaveItem, err = gtk.MenuItemNewWithLabel("   powersave")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -116,7 +117,7 @@ func main() {
 	menu.Add(powersaveItem)
 
 	// add "balance power" item
-	balancePowerItem, err = gtk.MenuItemNewWithLabel("   balance power")
+	balancePowerItem, err = gtk.MenuItemNewWithLabel("•  balance power")
 	if err != nil {
 		log.Fatal(err)
 	}

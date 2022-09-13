@@ -54,23 +54,6 @@ func (f CpuGovernor) SetMode(modeName string) (string, *dbus.Error) {
 	return modeName, nil
 }
 
-func setPowersaveGovernor() error {
-	cpu := intelcpu.New()
-	cores, _ := cpu.GetCores()
-
-	for _, core := range cores {
-		err := core.SetGovernor(intelcpu.CPUGovernorPowersave)
-		if err != nil {
-			return fmt.Errorf("cannot set cpu powersave governor: %w", err)
-		}
-		err = core.SetPreference(intelcpu.CPUPreferencePower)
-		if err != nil {
-			return fmt.Errorf("cannot set cpu power preference: %w", err)
-		}
-	}
-	return nil
-}
-
 func getPerfSetterFunc(governor intelcpu.CPUCoreGovernor, perfPreference intelcpu.CPUPreference) func() error {
 	f := func() error {
 		cpu := intelcpu.New()
@@ -103,8 +86,9 @@ func main() {
 	}
 	defer conn.Close()
 
+	// default mode when the service starts
 	cpuGov := CpuGovernor{
-		CpuGovernorName: "powersave",
+		CpuGovernorName: "balancepower",
 	}
 
 	conn.Export(cpuGov, dbusPath, dbusIface)
