@@ -22,30 +22,36 @@ const (
 
 const introSpec = `<node>
 	<interface name="com.github.kamilsamaj.CpuGovernor">
-		<method name="SetGovernor">
+		<method name="SetMode">
 			<arg direction="in" type="s"/>
 			<arg direction="out" type="s"/>
 		</method>
 	</interface>` + introspect.IntrospectDataString + `
 </node>`
 
-func (f CpuGovernor) SetGovernor(govName string) (string, *dbus.Error) {
-	log.Println("Selected governor:", govName)
-	if govName == "performance" {
-		err := setPerformanceGovernor()
-		if err != nil {
-			return "", dbus.NewError("org.freedesktop.DBus.Properties.Error", []interface{}{err.Error()})
-		}
-	} else if govName == "powersave" {
-		err := setPowersaveGovernor()
-		if err != nil {
-			return "", dbus.NewError("org.freedesktop.DBus.Properties.Error", []interface{}{err.Error()})
-		}
+func (f CpuGovernor) SetMode(modeName string) (string, *dbus.Error) {
+	log.Println("Selected mode:", modeName)
+	var modeSetterFunc func() error
+	if modeName == "powersave" {
+		modeSetterFunc = getPerfSetterFunc(intelcpu.CPUGovernorPowersave, intelcpu.CPUPreferencePower)
+	} else if modeName == "balancepower" {
+		modeSetterFunc = getPerfSetterFunc(intelcpu.CPUGovernorPowersave, intelcpu.CPUPreferencePower)
+	} else if modeName == "balanceperformance" {
+		modeSetterFunc = getPerfSetterFunc(intelcpu.CPUGovernorPowersave, intelcpu.CPUPreferenceBalancePerformance)
+	} else if modeName == "performance" {
+		modeSetterFunc = getPerfSetterFunc(intelcpu.CPUGovernorPerformance, intelcpu.CPUPreferencePerformance)
 	} else {
-		log.Printf("Unknown governor '%s'\n", govName)
+		log.Printf("Unknown governor '%s'\n", modeName)
+		return "", dbus.NewError("org.freedesktop.DBus.Properties.Error",
+			[]interface{}{fmt.Errorf("unknown governor '%s'", modeName).Error()})
 	}
-	f.CpuGovernorName = govName
-	return govName, nil
+
+	err := modeSetterFunc()
+	if err != nil {
+		return "", dbus.NewError("org.freedesktop.DBus.Properties.Error", []interface{}{err.Error()})
+	}
+	f.CpuGovernorName = modeName
+	return modeName, nil
 }
 
 func setPowersaveGovernor() error {
@@ -65,21 +71,24 @@ func setPowersaveGovernor() error {
 	return nil
 }
 
-func setPerformanceGovernor() error {
-	cpu := intelcpu.New()
-	cores, _ := cpu.GetCores()
+func getPerfSetterFunc(governor intelcpu.CPUCoreGovernor, perfPreference intelcpu.CPUPreference) func() error {
+	f := func() error {
+		cpu := intelcpu.New()
+		cores, _ := cpu.GetCores()
 
-	for _, core := range cores {
-		err := core.SetGovernor(intelcpu.CPUGovernorPerformance)
-		if err != nil {
-			return fmt.Errorf("cannot set cpu performance governor: %w", err)
+		for _, core := range cores {
+			err := core.SetGovernor(governor)
+			if err != nil {
+				return fmt.Errorf("cannot set cpu %s governor: %s", governor, err)
+			}
+			err = core.SetPreference(perfPreference)
+			if err != nil {
+				return fmt.Errorf("cannot set cpu %s preference: %s", perfPreference, err)
+			}
 		}
-		err = core.SetPreference(intelcpu.CPUPreferencePerformance)
-		if err != nil {
-			return fmt.Errorf("cannot set cpu performance preference: %w", err)
-		}
+		return nil
 	}
-	return nil
+	return f
 }
 
 func init() {
