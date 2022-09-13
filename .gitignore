@@ -1,5 +1,3 @@
-cpu-indicator-gtk3
-cpu-governor-svc
 .env
 coverage.out
 
