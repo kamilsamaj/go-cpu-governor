@@ -27,4 +27,4 @@ uninstall:
 	sudo ./scripts/uninstall_service.sh
 
 clean:
-	@rm -fv ./cpu-indicator-gtk3
+	@rm -fv ./cpu-indicator-gtk3 ./cpu-governor-svc

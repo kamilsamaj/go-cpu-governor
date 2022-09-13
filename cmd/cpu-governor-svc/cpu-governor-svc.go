@@ -35,7 +35,7 @@ func (f CpuGovernor) SetMode(modeName string) (string, *dbus.Error) {
 	if modeName == "powersave" {
 		modeSetterFunc = getPerfSetterFunc(intelcpu.CPUGovernorPowersave, intelcpu.CPUPreferencePower)
 	} else if modeName == "balancepower" {
-		modeSetterFunc = getPerfSetterFunc(intelcpu.CPUGovernorPowersave, intelcpu.CPUPreferencePower)
+		modeSetterFunc = getPerfSetterFunc(intelcpu.CPUGovernorPowersave, intelcpu.CPUPreferenceBalancePower)
 	} else if modeName == "balanceperformance" {
 		modeSetterFunc = getPerfSetterFunc(intelcpu.CPUGovernorPowersave, intelcpu.CPUPreferenceBalancePerformance)
 	} else if modeName == "performance" {
